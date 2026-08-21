@@ -1,6 +1,6 @@
-import 'package:angel/angel.dart';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_test/angel3_test.dart';
+import 'package:postgres_orm_app/angel.dart';
 import 'package:test/test.dart';
 
 // Angel also includes facilities to make testing easier.

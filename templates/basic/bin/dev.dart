@@ -1,9 +1,10 @@
 import 'dart:io';
-import 'package:angel/angel.dart';
+
 import 'package:belatuk_pretty_logging/belatuk_pretty_logging.dart';
 import 'package:angel3_container/mirrors.dart';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_hot/angel3_hot.dart';
+import 'package:basic_app/angel.dart';
 import 'package:logging/logging.dart';
 
 void main() async {

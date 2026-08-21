@@ -1,10 +1,10 @@
-import 'package:angel/models.dart';
-import 'package:angel/src/config/plugins/orm.dart';
 import 'package:angel3_configuration/angel3_configuration.dart';
 import 'package:angel3_migration_runner/angel3_migration_runner.dart';
 import 'package:angel3_migration_runner/postgres.dart';
 import 'package:file/local.dart';
 import 'package:logging/logging.dart';
+import 'package:mysql_orm_app/models.dart';
+import 'package:mysql_orm_app/src/config/plugins/orm.dart';
 
 void main(List<String> args) async {
   // Enable the logging

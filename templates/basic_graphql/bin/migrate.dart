@@ -1,9 +1,9 @@
-import 'package:angel/models.dart';
-import 'package:angel/src/config/plugins/orm.dart';
 import 'package:angel3_configuration/angel3_configuration.dart';
 import 'package:angel3_migration_runner/angel3_migration_runner.dart';
 import 'package:angel3_migration_runner/postgres.dart';
 import 'package:file/local.dart';
+import 'package:graphql_app/models.dart';
+import 'package:graphql_app/src/config/plugins/orm.dart';
 import 'package:logging/logging.dart';
 
 void main(List<String> args) async {
