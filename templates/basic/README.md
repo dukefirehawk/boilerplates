@@ -1,7 +1,7 @@
 
-# Basic Starter Application for Angel3 framework
+# Angel3 Starter Application Template
 
-This is a basic starter application for [Angel3 framework](https://angel3-framework.web.app) which is a full-stack Web framework in Dart.
+This is an [Angel3 framework](https://angel3-framework.web.app) starter application template.
 
 ## Installation & Setup
 

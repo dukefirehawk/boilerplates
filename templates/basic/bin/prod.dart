@@ -21,7 +21,7 @@ import 'package:starter_app/starter_app.dart';
 // * Creating an instance of `StaticReflector`
 // * Manually implementing the `Reflector` interface (cumbersome; not recommended)
 void main(List<String> args) => Runner(
-  'StarterApp',
+  'Starter App',
   configureServer,
   reflector: MirrorsReflector(),
 ).run(args);

@@ -12,7 +12,7 @@ void main() async {
   hierarchicalLoggingEnabled = true;
 
   var hot = HotReloader(() async {
-    var logger = Logger.detached('StarterApp')
+    var logger = Logger.detached('Starter App')
       ..level = Level.ALL
       ..onRecord.listen(prettyLog);
     var app = Angel(logger: logger, reflector: MirrorsReflector());
@@ -22,6 +22,6 @@ void main() async {
 
   var server = await hot.startServer('127.0.0.1', 3000);
   print(
-    '[StarterApp] server listening at http://${server.address.address}:${server.port}',
+    '[Starter App] server listening at http://${server.address.address}:${server.port}',
   );
 }
