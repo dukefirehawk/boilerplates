@@ -11,9 +11,9 @@ class GreetingMigration extends Migration {
   void up(Schema schema) {
     schema.create('greetings', (table) {
       table.serial('id').primaryKey();
+      table.varChar('message');
       table.timeStamp('created_at');
       table.timeStamp('updated_at');
-      table.varChar('message', length: 255);
     });
   }
 
@@ -28,7 +28,7 @@ class GreetingMigration extends Migration {
 // **************************************************************************
 
 class GreetingQuery extends Query<Greeting, GreetingQueryWhere> {
-  GreetingQuery({super.parent, Set<String>? trampoline}) {
+  GreetingQuery({Set<String>? trampoline}) {
     trampoline ??= <String>{};
     trampoline.add(tableName);
     _where = GreetingQueryWhere(this);
@@ -36,8 +36,6 @@ class GreetingQuery extends Query<Greeting, GreetingQueryWhere> {
 
   @override
   final GreetingQueryValues values = GreetingQueryValues();
-
-  List<String> _selectedFields = [];
 
   GreetingQueryWhere? _where;
 
@@ -53,17 +51,7 @@ class GreetingQuery extends Query<Greeting, GreetingQueryWhere> {
 
   @override
   List<String> get fields {
-    const localFields = ['id', 'created_at', 'updated_at', 'message'];
-    return _selectedFields.isEmpty
-        ? localFields
-        : localFields
-              .where((field) => _selectedFields.contains(field))
-              .toList();
-  }
-
-  GreetingQuery select(List<String> selectedFields) {
-    _selectedFields = selectedFields;
-    return this;
+    return const ['id', 'message', 'created_at', 'updated_at'];
   }
 
   @override
@@ -76,47 +64,40 @@ class GreetingQuery extends Query<Greeting, GreetingQueryWhere> {
     return GreetingQueryWhere(this);
   }
 
-  Optional<Greeting> parseRow(List row) {
-    if (row.every((x) => x == null)) {
-      return Optional.empty();
-    }
+  static Greeting? parseRow(List row) {
+    if (row.every((x) => x == null)) return null;
     var model = Greeting(
-      id: fields.contains('id') ? row[0].toString() : null,
-      createdAt: fields.contains('created_at')
-          ? mapToNullableDateTime(row[1])
-          : null,
-      updatedAt: fields.contains('updated_at')
-          ? mapToNullableDateTime(row[2])
-          : null,
-      message: fields.contains('message') ? (row[3] as String?) : null,
-    );
-    return Optional.of(model);
+        id: row[0].toString(),
+        message: (row[1] as String?),
+        createdAt: (row[2] as DateTime?),
+        updatedAt: (row[3] as DateTime?));
+    return model;
   }
 
   @override
   Optional<Greeting> deserialize(List row) {
-    return parseRow(row);
+    return Optional.ofNullable(parseRow(row));
   }
 }
 
 class GreetingQueryWhere extends QueryWhere {
   GreetingQueryWhere(GreetingQuery query)
-    : id = NumericSqlExpressionBuilder<int>(query, 'id'),
-      createdAt = DateTimeSqlExpressionBuilder(query, 'created_at'),
-      updatedAt = DateTimeSqlExpressionBuilder(query, 'updated_at'),
-      message = StringSqlExpressionBuilder(query, 'message');
+      : id = NumericSqlExpressionBuilder<int>(query, 'id'),
+        message = StringSqlExpressionBuilder(query, 'message'),
+        createdAt = DateTimeSqlExpressionBuilder(query, 'created_at'),
+        updatedAt = DateTimeSqlExpressionBuilder(query, 'updated_at');
 
   final NumericSqlExpressionBuilder<int> id;
+
+  final StringSqlExpressionBuilder message;
 
   final DateTimeSqlExpressionBuilder createdAt;
 
   final DateTimeSqlExpressionBuilder updatedAt;
 
-  final StringSqlExpressionBuilder message;
-
   @override
   List<SqlExpressionBuilder> get expressionBuilders {
-    return [id, createdAt, updatedAt, message];
+    return [id, message, createdAt, updatedAt];
   }
 }
 
@@ -131,29 +112,25 @@ class GreetingQueryValues extends MapQueryValues {
   }
 
   set id(String? value) => values['id'] = value;
-
-  DateTime? get createdAt {
-    return (values['created_at'] as DateTime?);
-  }
-
-  set createdAt(DateTime? value) => values['created_at'] = value;
-
-  DateTime? get updatedAt {
-    return (values['updated_at'] as DateTime?);
-  }
-
-  set updatedAt(DateTime? value) => values['updated_at'] = value;
-
   String? get message {
     return (values['message'] as String?);
   }
 
   set message(String? value) => values['message'] = value;
+  DateTime? get createdAt {
+    return (values['created_at'] as DateTime?);
+  }
 
+  set createdAt(DateTime? value) => values['created_at'] = value;
+  DateTime? get updatedAt {
+    return (values['updated_at'] as DateTime?);
+  }
+
+  set updatedAt(DateTime? value) => values['updated_at'] = value;
   void copyFrom(Greeting model) {
+    message = model.message;
     createdAt = model.createdAt;
     updatedAt = model.updatedAt;
-    message = model.message;
   }
 }
 
@@ -163,54 +140,46 @@ class GreetingQueryValues extends MapQueryValues {
 
 @generatedSerializable
 class Greeting extends _Greeting {
-  Greeting({this.id, this.createdAt, this.updatedAt, required this.message});
-
-  /// A unique identifier corresponding to this item.
-  @override
-  String? id;
-
-  /// The time at which this item was created.
-  @override
-  DateTime? createdAt;
-
-  /// The last time at which this item was updated.
-  @override
-  DateTime? updatedAt;
+  Greeting({this.id, required this.message, this.createdAt, this.updatedAt});
 
   @override
-  String? message;
+  final String? id;
 
-  Greeting copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? message,
-  }) {
+  @override
+  final String? message;
+
+  @override
+  final DateTime? createdAt;
+
+  @override
+  final DateTime? updatedAt;
+
+  Greeting copyWith(
+      {String? id, String? message, DateTime? createdAt, DateTime? updatedAt}) {
     return Greeting(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      message: message ?? this.message,
-    );
+        id: id ?? this.id,
+        message: message ?? this.message,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt);
   }
 
   @override
   bool operator ==(other) {
     return other is _Greeting &&
         other.id == id &&
+        other.message == message &&
         other.createdAt == createdAt &&
-        other.updatedAt == updatedAt &&
-        other.message == message;
+        other.updatedAt == updatedAt;
   }
 
   @override
   int get hashCode {
-    return hashObjects([id, createdAt, updatedAt, message]);
+    return hashObjects([id, message, createdAt, updatedAt]);
   }
 
   @override
   String toString() {
-    return 'Greeting(id=$id, createdAt=$createdAt, updatedAt=$updatedAt, message=$message)';
+    return 'Greeting(id=$id, message=$message, createdAt=$createdAt, updatedAt=$updatedAt)';
   }
 
   Map<String, dynamic> toJson() {
@@ -246,37 +215,36 @@ class GreetingSerializer extends Codec<Greeting, Map> {
 
   @override
   GreetingDecoder get decoder => const GreetingDecoder();
-
   static Greeting fromMap(Map map) {
     if (map['message'] == null) {
       throw FormatException("Missing required field 'message' on Greeting.");
     }
 
     return Greeting(
-      id: map['id'] as String?,
-      createdAt: map['created_at'] != null
-          ? (map['created_at'] is DateTime
-                ? (map['created_at'] as DateTime)
+        id: map['id'] as String?,
+        message: map['message'] as String?,
+        createdAt: map['created_at'] != null
+            ? (map['created_at'] is DateTime
+                ? (map['created_at'] as DateTime?)
                 : DateTime.parse(map['created_at'].toString()))
-          : null,
-      updatedAt: map['updated_at'] != null
-          ? (map['updated_at'] is DateTime
-                ? (map['updated_at'] as DateTime)
+            : null,
+        updatedAt: map['updated_at'] != null
+            ? (map['updated_at'] is DateTime
+                ? (map['updated_at'] as DateTime?)
                 : DateTime.parse(map['updated_at'].toString()))
-          : null,
-      message: map['message'] as String?,
-    );
+            : null);
   }
 
-  static Map<String, dynamic> toMap(_Greeting? model) {
-    if (model == null) {
-      throw FormatException("Required field [model] cannot be null");
+  static Map<String, dynamic> toMap(_Greeting model) {
+    if (model.message == null) {
+      throw FormatException("Missing required field 'message' on Greeting.");
     }
+
     return {
       'id': model.id,
-      'created_at': model.createdAt?.toIso8601String(),
-      'updated_at': model.updatedAt?.toIso8601String(),
       'message': model.message,
+      'created_at': model.createdAt?.toIso8601String(),
+      'updated_at': model.updatedAt?.toIso8601String()
     };
   }
 }
@@ -284,16 +252,16 @@ class GreetingSerializer extends Codec<Greeting, Map> {
 abstract class GreetingFields {
   static const List<String> allFields = <String>[
     id,
-    createdAt,
-    updatedAt,
     message,
+    createdAt,
+    updatedAt
   ];
 
   static const String id = 'id';
 
+  static const String message = 'message';
+
   static const String createdAt = 'created_at';
 
   static const String updatedAt = 'updated_at';
-
-  static const String message = 'message';
 }
