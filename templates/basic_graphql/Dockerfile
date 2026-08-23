@@ -1,4 +1,5 @@
-FROM docker.io/dart:3.9.4
+FROM dart:latest
+
 # Copy all the source code
 COPY ./config /app/config
 COPY ./lib /app/lib
@@ -20,4 +21,3 @@ CMD dart ./bin/prod.dart -p 3000 -a 0.0.0.0
 
 # Use -j flag to set higher number of isolates
 #CMD dart ./bin/prod.dart -p 3000 -a 0.0.0.0 -j 50
-

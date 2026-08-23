@@ -1,6 +1,6 @@
 import 'package:angel3_container/mirrors.dart';
 import 'package:angel3_production/angel3_production.dart';
-import 'package:graphql_app/angel.dart';
+import 'package:starter_app/starter_app.dart';
 
 // NOTE: By default, the Runner class does not use the `MirrorsReflector`, or any
 // reflector, by default.
@@ -20,10 +20,8 @@ import 'package:graphql_app/angel.dart';
 // * Generation via `package:angel3_container_generator`
 // * Creating an instance of `StaticReflector`
 // * Manually implementing the `Reflector` interface (cumbersome; not recommended)
-//
-// As of January 4th, 2018, the documentation has not yet been updated to state this,
-// so in the meantime, visit the Angel chat for further questions:
-//
-// https://gitter.im/angel_dart/discussion
-void main(List<String> args) =>
-    Runner('Angel3', configureServer, reflector: MirrorsReflector()).run(args);
+void main(List<String> args) => Runner(
+  'Starter App',
+  configureServer,
+  reflector: MirrorsReflector(),
+).run(args);

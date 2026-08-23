@@ -1,6 +1,6 @@
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_test/angel3_test.dart';
-import 'package:graphql_app/angel.dart';
+import 'package:starter_app/starter_app.dart';
 import 'package:test/test.dart';
 
 // Angel also includes facilities to make testing easier.
