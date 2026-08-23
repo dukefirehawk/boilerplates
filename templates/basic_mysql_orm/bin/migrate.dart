@@ -1,10 +1,10 @@
 import 'package:angel3_configuration/angel3_configuration.dart';
 import 'package:angel3_migration_runner/angel3_migration_runner.dart';
-import 'package:angel3_migration_runner/postgres.dart';
+import 'package:angel3_migration_runner/mysql.dart';
 import 'package:file/local.dart';
 import 'package:logging/logging.dart';
-import 'package:mysql_orm_app/models.dart';
-import 'package:mysql_orm_app/src/config/plugins/orm.dart';
+import 'package:starter_app/models.dart';
+import 'package:starter_app/src/config/plugins/orm.dart';
 
 void main(List<String> args) async {
   // Enable the logging
@@ -20,10 +20,13 @@ void main(List<String> args) async {
 
   var fs = LocalFileSystem();
   var configuration = await loadStandaloneConfiguration(fs);
-  var connection = await postgresConnection(configuration);
-  var migrationRunner = PostgresMigrationRunner(
+
+  // MySQL database
+  var connection = await connectToMySQL(configuration);
+  var migrationRunner = MySqlMigrationRunner(
     connection,
     migrations: [GreetingMigration()],
   );
+
   await runMigrations(migrationRunner, args);
 }

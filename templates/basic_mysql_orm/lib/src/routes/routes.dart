@@ -2,14 +2,11 @@ import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_orm/angel3_orm.dart';
 import 'package:angel3_static/angel3_static.dart';
 import 'package:file/file.dart';
+
 import 'controllers/controllers.dart' as controllers;
 import '../models/greeting.dart';
 
 /// Put your app routes here!
-///
-/// See the wiki for information about routing, requests, and responses:
-/// * https://angel3-docs.dukefirehawk.com/guides/basic-routing
-/// * https://angel3-docs.dukefirehawk.com/guides/requests-and-responses
 AngelConfigurer configureServer(FileSystem fileSystem) {
   return (Angel app) async {
     // Typically, you want to mount controllers first, after any global middleware.
@@ -50,10 +47,6 @@ AngelConfigurer configureServer(FileSystem fileSystem) {
     //
     // In production, however, prefer serving static files through NGINX or a
     // similar reverse proxy.
-    //
-    // Read the following two sources for documentation:
-    // * https://medium.com/the-angel-framework/serving-static-files-with-the-angel-framework-2ddc7a2b84ae
-    // * https://pub.dev/packages/angel3_static
     if (!app.environment.isProduction) {
       var vDir = VirtualDirectory(
         app,
@@ -67,10 +60,6 @@ AngelConfigurer configureServer(FileSystem fileSystem) {
     app.fallback((req, res) => throw AngelHttpException.notFound());
 
     // Set our application up to handle different errors.
-    //
-    // Read the following for documentation:
-    // * https://angel3-docs.dukefirehawk.com/guides/error-handling
-
     var oldErrorHandler = app.errorHandler;
     app.errorHandler = (e, req, res) async {
       if (req.accepts('text/html', strict: true)) {
